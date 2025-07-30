@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { formSchema } from "@/lib/Validators/formValidator";
 import type z from "zod";
+import { Textarea } from "./ui/textarea";
 
 export function PropertyForm() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -23,9 +24,9 @@ export function PropertyForm() {
     mode: "onChange",
     defaultValues: {
       property_Name: "",
-      property_Type: "",
-      property_Price: 0,
       property_Location: "",
+      property_Price: 0,
+      property_Info: "",
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -42,7 +43,7 @@ export function PropertyForm() {
             <FormItem>
               <FormLabel>Property Name</FormLabel>
               <FormControl>
-                <Input placeholder="enter your property name" {...field} />
+                <Input placeholder="e.g. Plot" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -50,12 +51,12 @@ export function PropertyForm() {
         />
         <FormField
           control={form.control}
-          name="property_Type"
+          name="property_Location"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Property Type</FormLabel>
+              <FormLabel>Property Location</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Plot" {...field} />
+                <Input placeholder="enter your property location" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -81,14 +82,15 @@ export function PropertyForm() {
             </FormItem>
           )}
         />
+        
         <FormField
           control={form.control}
-          name="property_Location"
+          name="property_Info"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Property Location</FormLabel>
+              <FormLabel>Property Info</FormLabel>
               <FormControl>
-                <Input placeholder="enter your property location" {...field} />
+                <Textarea placeholder="enter property Info" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
