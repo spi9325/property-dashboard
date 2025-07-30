@@ -2,12 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
+import axios from "axios"
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,8 +28,18 @@ export function PropertyForm() {
       property_Info: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const saveProperty = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/add/property`,
+      {
+        propertyName:values.property_Name,
+        propertyPrice:values.property_Price,
+        propertyLocation:values.property_Location,
+        propertyInfo:values.property_Info
+      }
+    );
+    if(saveProperty.status === 200){
+      console.log(saveProperty.data,"from frontend");
+    }
   }
 
   return (
