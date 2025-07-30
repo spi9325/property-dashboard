@@ -17,7 +17,21 @@ import { formSchema } from "@/lib/Validators/formValidator";
 import type z from "zod";
 import { Textarea } from "./ui/textarea";
 
-export function PropertyForm() {
+
+
+interface typesType {
+  propertyName: string;
+  propertyLocation: string;
+  propertyInfo: string;
+  propertyPrice: number;
+}
+
+interface propType{
+  setFilteredTypes:React.Dispatch<React.SetStateAction<typesType[]>>
+}
+
+
+export function PropertyForm({setFilteredTypes}:propType) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -29,6 +43,14 @@ export function PropertyForm() {
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setFilteredTypes((prev)=>[...prev,
+      {
+        propertyName:values.property_Name,
+        propertyLocation:values.property_Location,
+        propertyPrice:values.property_Price,
+        propertyInfo:values.property_Info
+      }
+    ])
     const saveProperty = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/add/property`,
       {
         propertyName:values.property_Name,
@@ -37,9 +59,7 @@ export function PropertyForm() {
         propertyInfo:values.property_Info
       }
     );
-    if(saveProperty.status === 200){
-      console.log(saveProperty.data,"from frontend");
-    }
+   
   }
 
   return (

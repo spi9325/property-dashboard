@@ -2,38 +2,46 @@ import { useEffect, useState } from "react";
 import { ComboboxDemo } from "./components/ui/combobox";
 import { Button } from "./components/ui/button";
 import { PropertyForm } from "./components/PropertyForm";
+import axios from "axios";
 
 interface typesType {
-  property: string;
-  location: string;
-  description: string;
-  prize: number;
+  propertyName: string;
+  propertyLocation: string;
+  propertyInfo: string;
+  propertyPrice: number;
 }
 
 const App = () => {
   const [types, setTypes] = useState<typesType[]>([
     {
-      property: "Plot",
-      location: "Pune",
-      description: "A large-pst of land available for development",
-      prize: 250000,
+      propertyName: "Plot",
+      propertyLocation: "Pune",
+      propertyInfo: "A large-pst of land available for development",
+      propertyPrice: 250000,
     },
-    {
-      property: "sanket",
-      location: "Pune",
-      description: "A large-pst of land available for development",
-      prize: 250000,
-    },
+    
   ]);
-  const [filteredTypes, setFilteredTypes] = useState([
+  const [filteredTypes, setFilteredTypes] = useState<typesType[]>([
     {
-      property: "",
-      location: "",
-      description: "",
-      prize: 0,
+      propertyName: "",
+      propertyLocation: "",
+      propertyInfo: "",
+      propertyPrice: 0,
     },
   ]);
   const [curPropertyView, setCurPropertyView] = useState("");
+
+  useEffect(()=>{
+    async function getTypes(){
+        const property = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/getall/property`);
+        console.log(property.data.result);
+        property.data.result.map((cur:typesType)=>{
+            setFilteredTypes((prev)=>[...prev,cur])
+            setTypes((prev)=>[...prev,cur])
+        })
+    }
+    getTypes()
+  },[])
 
   return (
     <main className="max-w-[1400px] mx-auto border border-black py-2 px-5 md:px-9">
@@ -54,14 +62,14 @@ const App = () => {
               key={index}
               className="flex flex-col gap-2 h-[200px] bg-slate-50 p-3 rounded-md shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]"
             >
-              <p className="text-2xl font-semibold">{cur.property}</p>
-              <p className="">{cur.location}</p>
+              <p className="text-2xl font-semibold">{cur.propertyName}</p>
+              <p className="">{cur.propertyLocation}</p>
               <p className="border border-black h-[56px] overflow-hidden px-1">
-                {cur.description}
+                {cur.propertyInfo}
               </p>
               <div className="flex justify-between items-center">
-                <p className="">${cur.prize}</p>
-                <Button onClick={() => setCurPropertyView(cur.property)}>
+                <p className="">${cur.propertyPrice}</p>
+                <Button onClick={() => setCurPropertyView(cur.propertyName)}>
                   View
                 </Button>
               </div>
@@ -71,12 +79,12 @@ const App = () => {
       </section>
 
       <section className=" mt-[70px] grid grid-cols-1 md:grid-cols-2 gap-4  px-1 py-2 md:py-[50px] md:px-[50px] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
-        <PropertyForm />
+        <PropertyForm setFilteredTypes={setFilteredTypes}/>
         <div className="">
           {curPropertyView == ""
             ? <p className="text-center">select any property</p> 
             : types.map((cur,index) => {
-              if(cur.property === curPropertyView){
+              if(cur.propertyName === curPropertyView){
                     return (
                       <div key={index} className="relative rounded-md md:px-3 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
                     <p className="text-2xl font-bold text-center">
@@ -87,20 +95,20 @@ const App = () => {
                         <img src="./property-image.jpg" alt="property image" />
                       </div>
                       <div className="mt-5">
-                        <p className="text-2xl font-bold">{cur.property}</p>
+                        <p className="text-2xl font-bold">{cur.propertyName}</p>
                         <div className="">
-                          <span className="font-bold">Location: </span>{cur.location}
+                          <span className="font-bold">Location: </span>{cur.propertyLocation}
                         </div>
                         <div className="">
                           <span className="font-semibold">Price: </span>
-                          <span className="">${cur.prize}</span>
+                          <span className="">${cur.propertyPrice}</span>
                         </div>
                       </div>
                     </div>
                     <div className="mt-5 ">
                       <p className="text-md mb-2">Property Info</p>
                       <p className="text-sm sm:text-md rounded-sm  h-[140px] p-2 overflow-x-hidden overflow-y-scroll shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
-                        {cur.description}
+                        {cur.propertyInfo}
                       </p>
                     </div>
                   </div>

@@ -20,10 +20,10 @@ import {
 } from "@/components/ui/popover"
 
 interface typesType {
-  property: string;
-  location: string;
-  description: string;
-  prize: number;
+  propertyName: string;
+  propertyLocation: string;
+  propertyInfo: string;
+  propertyPrice: number;
 }
 
 interface com{
@@ -39,7 +39,7 @@ React.useEffect(() => {
   if (value === "") {
     setFilteredTypes(types); 
   } else {
-    setFilteredTypes(types.filter((cur) => cur.property === value));
+    setFilteredTypes(types.filter((cur) => cur.propertyName === value));
   }
 }, [value]);
 
@@ -53,7 +53,7 @@ React.useEffect(() => {
           className="w-[200px] justify-between"
         >
           {value
-            ? types.find((cur) => cur.property === value)?.property
+            ? types.find((cur) => cur.propertyName === value)?.propertyName
             : "Filter By Types..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -66,18 +66,18 @@ React.useEffect(() => {
             <CommandGroup>
               {types.map((cur) => (
                 <CommandItem
-                  key={cur.property}
-                  value={cur.property}
+                  key={cur.propertyName}
+                  value={cur.propertyName}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
                   }}
                 >
-                  {cur.property}
+                  {cur.propertyName}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === cur.property ? "opacity-100" : "opacity-0"
+                      value === cur.propertyName ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
