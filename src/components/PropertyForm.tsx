@@ -51,7 +51,7 @@ export function PropertyForm({setFilteredTypes}:propType) {
         propertyInfo:values.property_Info
       }
     ])
-    const saveProperty = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/add/property`,
+    await axios.post(`${import.meta.env.VITE_BACKEND_URL}/add/property`,
       {
         propertyName:values.property_Name,
         propertyPrice:values.property_Price,
